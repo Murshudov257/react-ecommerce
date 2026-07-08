@@ -1,0 +1,34 @@
+.search-box {
+  grid-column: 1/-1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.search {
+  width: 100%;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.1);
+  background: #1e293b;
+  color: white;
+  font-size: 16px;
+  outline: none;
+  transition: .3s;
+}
+
+.search::placeholder {
+  color: #94a3b8;
+}
+
+.search:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 12px rgba(56,189,248,.4);
+}
+
+.search-icon {
+  color: white;
+  font-size: 22px;
+  margin-right: 10px;
+}

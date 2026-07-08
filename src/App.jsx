@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import axios from "axios";
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
+
+import api from "./services/api";
+
+import Loader from "./components/Loader/Loader";
+import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
+import ProductCard from "./components/ProductCard/ProductCard";
+import LoadMoreButton from "./components/LoadMoreButton/LoadMoreButton";
+import SearchBar from "./components/SearchBar/SearchBar";
 
 function App() {
   const [data, setData] = useState([]);
@@ -10,67 +15,70 @@ function App() {
   const [limit, setLimit] = useState(5);
   const [spinload, setSpinLoad] = useState(false);
   const [error, setError] = useState(false);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    axios
-      .get("https://dummyjson.com/products")
+    api
+      .get("/products")
       .then((response) => {
         setData(response.data.products);
         setLoading(false);
       })
-      .catch((error) => {
+      .catch(() => {
         setError(true);
         setLoading(false);
       });
   }, []);
 
-  if (loading) {
-    return (
-      <div className="loader-container">
-        <div className="spinner"></div>
-        <h2>Loading Products...</h2>
-      </div>
-    );
-  }
-
   const loadMoreData = () => {
     setSpinLoad(true);
+
     setTimeout(() => {
-      setLimit(limit + 5);
+      setLimit((prev) => prev + 5);
       setSpinLoad(false);
     }, 1500);
   };
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  const filteredData = data.filter((item) =>
+    item.title.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="app">
-      {error && (
-        <Stack sx={{ width: "100%" }} spacing={2}>
-          <Alert variant="filled" severity="error">
-            Something went wrong...
-          </Alert>
-        </Stack>
+
+      <SearchBar
+        search={search}
+        setSearch={setSearch}
+      />
+
+      {error && <ErrorMessage />}
+
+      {filteredData.length === 0 ? (
+        <h2 className="not-found">
+          Products Not Found
+        </h2>
+      ) : (
+        filteredData
+          .slice(0, limit)
+          .map((item) => (
+            <ProductCard
+              key={item.id}
+              item={item}
+            />
+          ))
       )}
-      {data.slice(0, limit).map((item) => {
-        return (
-          <div key={item.id}>
-            <img src={item.images[0]} alt="" />
-            <h2>{item.title}</h2>
-            <p>{item.description}</p>
-            <h3>{item.price + " $"}</h3>
-          </div>
-        );
-      })}
-      {data.length > limit && (
-        <button onClick={loadMoreData} disabled={spinload}>
-          {spinload ? (
-            <>
-              <div className="btn-spinner"></div>
-              <span>Loading...</span>
-            </>
-          ) : (
-            "Load More"
-          )}
-        </button>
+
+      {filteredData.length > limit && (
+        <LoadMoreButton
+          spinload={spinload}
+          loadMoreData={loadMoreData}
+        />
       )}
+
     </div>
   );
 }
