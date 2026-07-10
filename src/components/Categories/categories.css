@@ -1,0 +1,27 @@
+.categories {
+  display: flex;
+  align-items: center;
+}
+
+.categories select {
+  width: 220px;
+  padding: 12px 18px;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  background: #1e293b;
+  color: #f8fafc;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: 0.3s;
+}
+
+.categories select:hover {
+  border-color: #3b82f6;
+}
+
+.categories select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}

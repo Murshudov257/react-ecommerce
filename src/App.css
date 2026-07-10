@@ -24,3 +24,10 @@ body {
   font-size: 28px;
   margin-top: 80px;
 }
+.filters {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
